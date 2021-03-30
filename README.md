@@ -10,6 +10,7 @@ The classes used in this project are:
   - Person:
         - Client
   - Producer
+
 The actions that can be made are:
   1. Add money to the store
   2. Add a producer
