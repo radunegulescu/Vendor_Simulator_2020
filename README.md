@@ -1,6 +1,7 @@
 Vendor Simulator Project
 
 This app helps stores to manage their stocks. 
+
 The classes used in this project are:
   - Product:
         - Food
