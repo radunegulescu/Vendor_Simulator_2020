@@ -44,9 +44,10 @@ public class Client extends Person{
     public String toString() {
         return "Client{" +
                 "age=" + age +
-                ", name='" + name + '\'' +
-                ", phoneNumber=" + phoneNumber +
-                ", email='" + email + '\'' +
+                " name='" + name + '\'' +
+                " personId=" + personId +
+                " phoneNumber=" + phoneNumber +
+                " email='" + email + '\'' +
                 '}';
     }
 

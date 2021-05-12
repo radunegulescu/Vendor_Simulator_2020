@@ -51,11 +51,12 @@ public class Clothes extends Product{
     public String toString() {
         return "Clothes{" +
                 "name='" + name + '\'' +
-                ", pricePerUnit=" + pricePerUnit +
-                ", producer=" + producer +
-                ", weight=" + weight +
-                ", units=" + units +
-                ", size='" + size + '\'' +
+                " productId=" + productId +
+                " pricePerUnit=" + pricePerUnit +
+                " producer=" + producer +
+                " weight=" + weight +
+                " units=" + units +
+                " size='" + size + '\'' +
                 '}';
     }
 }

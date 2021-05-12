@@ -2,21 +2,28 @@ package project.classes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class Order {
+    static int maxId;
+    private int orderId;
     private Client client;
     private List<Product> products;
     private LocalDateTime date;
 
     public Order(Client client, List<Product> products, LocalDateTime date) {
+        this.orderId = Order.maxId + 1;
+        Order.maxId += 1;
         this.client = client;
         this.products = products;
         this.date = date;
     }
 
     public Order(){
+        this.orderId = Order.maxId + 1;
+        Order.maxId += 1;
         this.client = null;
         this.products = null;
         this.date = null;
@@ -34,6 +41,14 @@ public class Order {
         return products;
     }
 
+    public List<Integer> getProductsIds() {
+        List<Integer> list = new ArrayList<>();
+        for(Product p:products){
+            list.add(p.getProductId());
+        }
+        return list;
+    }
+
     public void setProducts(List<Product> products) {
         this.products = products;
     }
@@ -44,6 +59,10 @@ public class Order {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public int getOrderId() {
+        return orderId;
     }
 
     @Override
@@ -63,9 +82,10 @@ public class Order {
     public String toString() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         return "Order{" +
-                "client=" + client +
-                ", products=" + products +
-                ", date=" + date.format(formatter) +
+                "orderId=" + orderId +
+                " client=" + client +
+                " products=" + products +
+                " date=" + date.format(formatter) +
                 '}';
     }
 }

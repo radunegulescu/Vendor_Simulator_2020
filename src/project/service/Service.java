@@ -2,6 +2,7 @@ package project.service;
 
 import project.classes.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -13,6 +14,10 @@ public class Service {
     private ArrayList<Order> orders;     // lista cu comenzile plasate
     private HashMap<String, Double> productProducer;   // lista care mapeaza producatorii la sumele platite catre acestia
     private ArrayList<Client> clients;  // lista cu clientii
+    private ReaderWriterService readerWriterService;
+    private ArrayList<Person> contactPeople;
+    private ArrayList<Food> foods;
+    private AuditService auditService;
 
     private void setMoney(double s){
         this.money = s;
@@ -26,7 +31,7 @@ public class Service {
         return money;
     }
 
-    private HashSet<Producer> getProducers() {
+    public HashSet<Producer> getProducers() {
         return producers;
     }
 
@@ -34,7 +39,7 @@ public class Service {
         this.producers = producers;
     }
 
-    private ArrayList<Product> getStock() {
+    public ArrayList<Product> getStock() {
         return stock;
     }
 
@@ -58,13 +63,25 @@ public class Service {
         this.productProducer = productProducer;
     }
 
-    public Service() {
+    public ArrayList<Client> getClients() {
+        return clients;
+    }
+
+    public ArrayList<Person> getContactPeople() {
+        return contactPeople;
+    }
+
+    public Service() throws IOException {
         this.producers = new HashSet<>();
         this.stock = new ArrayList<>();
         this.orders = new ArrayList<>();
         this.productProducer = new HashMap<>();
         this.money = 0;
         this.clients = new ArrayList<>();
+        this.readerWriterService = ReaderWriterService.getInstance();
+        this.contactPeople = new ArrayList<>();
+        this.foods = new ArrayList<>();
+        this.auditService = new AuditService();
     }
     private void addMapProducer(int producerId, double units, double pricePerUnit){
         List<Producer> list = new ArrayList<>(producers);
@@ -76,11 +93,15 @@ public class Service {
             productProducer.put(producerName, units * pricePerUnit);
         }
     }
-    private void addProducer(String name, String address, String nameContactPerson, String phoneNumber, String email){
+    private void addProducer(String name, String address, String nameContactPerson, String phoneNumber, String email) throws IOException {
         Person contactPerson = new Person(nameContactPerson, phoneNumber, email);
-        producers.add(new Producer(name, contactPerson, address));
+        contactPeople.add(contactPerson);
+        Producer producer = new Producer(name, contactPerson, address);
+        producers.add(producer);
+        readerWriterService.writeToCSV(producer);
+        auditService.write("addProducer");
     }
-    private void addProduct1(double units, double pricePerUnit, Product p, int producerId){
+    private void addProduct1(double units, double pricePerUnit, Product p, int producerId) throws IOException {
         if(money >= units * pricePerUnit){
             addMoney(-units * pricePerUnit);
             System.out.println("Commercial excess: ");
@@ -93,7 +114,7 @@ public class Service {
             System.out.println("Not enough money in the store");
         }
     }
-    private void addProduct(Product p, Double commerciaExcess){
+    private void addProduct(Product p, Double commerciaExcess) throws IOException {
         if (!stock.contains(p)){
             p.setPricePerUnit(p.getPricePerUnit() * (1 + commerciaExcess));
             stock.add(p);
@@ -107,29 +128,31 @@ public class Service {
             }
         }
         SortTheStock();
+        auditService.write("addProduct");
     }
-    private void addFood(int producerId, String name, double pricePerUnit, double weight, double units, int calories, List<String> ingredients){
+    private void addFood(int producerId, String name, double pricePerUnit, double weight, double units, int calories, List<String> ingredients) throws IOException {
         List<Producer> list = new ArrayList<>(producers);
         Product p = new Food(name, pricePerUnit, list.get(producerId - 1), weight, units, calories, ingredients);
         addProduct1(units, pricePerUnit, p, producerId);
+        readerWriterService.writeToCSV(p);
     }
-    private void addDrink(int producerId, String name, double pricePerUnit, double weight, double units, double alcohol){
+    private void addDrink(int producerId, String name, double pricePerUnit, double weight, double units, double alcohol) throws IOException {
         List<Producer> list = new ArrayList<>(producers);
         Product p = new Drink(name, pricePerUnit, list.get(producerId - 1), weight, units, alcohol);
         addProduct1(units, pricePerUnit, p, producerId);
     }
-    private void addClothes(int producerId, String name, double pricePerUnit, double weight, double units, String size){
+    private void addClothes(int producerId, String name, double pricePerUnit, double weight, double units, String size) throws IOException {
         List<Producer> list = new ArrayList<>(producers);
         Product p = new Clothes(name, pricePerUnit, list.get(producerId - 1), weight, units, size);
         addProduct1(units, pricePerUnit, p, producerId);
     }
-    private void addOthers(int producerId, String name, double pricePerUnit, double weight, double units, String category){
+    private void addOthers(int producerId, String name, double pricePerUnit, double weight, double units, String category) throws IOException {
         List<Producer> list = new ArrayList<>(producers);
         Product p = new Others(name, pricePerUnit, list.get(producerId - 1), weight, units, category);
         addProduct1(units, pricePerUnit, p, producerId);
     }
 
-    private void addOrder(int[] indicesOfProducts, int[] units, Client client){
+    private void addOrder(int[] indicesOfProducts, int[] units, Client client) throws IOException {
         List<Product> products = new ArrayList<>();
         System.out.println("Order:");
         List<Integer> indicesAux = new ArrayList<>();
@@ -166,6 +189,7 @@ public class Service {
         LocalDateTime now = LocalDateTime.now();
         Order order = new Order(client, products, now);
         orders.add(order);
+        readerWriterService.writeToCSV(order);
         showStock();
         int j = 1;
         k = 0;
@@ -179,18 +203,21 @@ public class Service {
             k++;
         }
         SortTheStock();
+        auditService.write("addOrder");
     }
 
-    private void SortTheStock(){
+    private void SortTheStock() throws IOException {
         Collections.sort(stock);
+        auditService.write("sortTheStock");
     }
 
-    private void showStock(){
+    private void showStock() throws IOException {
         int i = 1;
         for (Product product : stock){
             System.out.println(i + ": " + product);
             i++;
         }
+        auditService.write("showStock");
     }
 
     @Override
@@ -203,7 +230,7 @@ public class Service {
                 '}';
     }
 
-    public void start(){
+    public void start() throws IOException {
         boolean OK = true;
         while(OK) {
             System.out.println("Menu");
@@ -238,15 +265,16 @@ public class Service {
         }
     }
 
-    private void addMoneyToTheStore(){
+    private void addMoneyToTheStore() throws IOException {
         System.out.println("The added sum of money is:");
         Scanner read = new Scanner(System.in);
         double s = read.nextDouble();
         addMoney(s);
         System.out.println("The total sum of money is: " + this.money);
+        auditService.write("addMoneyToTheStore");
     }
 
-    private void addProducerAux(){
+    private void addProducerAux() throws IOException {
         Scanner read = new Scanner(System.in);
         System.out.println("Name of the producer:");
         String name = read.nextLine();
@@ -260,7 +288,7 @@ public class Service {
         String email = read.nextLine();
         addProducer(name, address, nameContactPerson, phoneNumber, email);
     }
-    private void showProducers(){
+    private void showProducers() throws IOException {
         System.out.println("Producers:");
         int i = 1;
         for (Producer producer : producers){
@@ -272,12 +300,14 @@ public class Service {
                     ", " + producer.getContactPerson().getEmail());
             i++;
         }
+        auditService.write("showProducers");
     }
-    private void showStoreMoney(){
+    private void showStoreMoney() throws IOException {
         System.out.println("Money in the store = " + money);
+        auditService.write("showStoreMoney");
     }
 
-    private void addProductAux(){
+    private void addProductAux() throws IOException {
         System.out.println("Choose a producer:");
         showProducers();
         Scanner readString = new Scanner(System.in);
@@ -329,7 +359,7 @@ public class Service {
             default -> System.out.println("Non-action");
         }
     }
-    private void addClient(){
+    private void addClient() throws IOException {
         System.out.println("New Client:");
         Scanner read = new Scanner(System.in);
         System.out.println("Name:");
@@ -340,9 +370,16 @@ public class Service {
         String email = read.nextLine();
         System.out.println("Age:");
         int age = read.nextInt();
-        clients.add(new Client(name, phoneNumber, email, age));
+        Client client = new Client(name, phoneNumber, email, age);
+        addClient(client);
+        auditService.write("addClient");
     }
-    private void showClients(){
+    private void addClient(Client client) throws IOException {
+        clients.add(client);
+        readerWriterService.writeToCSV(client);
+        auditService.write("addClient");
+    }
+    private void showClients() throws IOException {
         System.out.println("Clients:");
         for(int i = 0; i < clients.size(); i++){
             System.out.println("Client" + (i + 1));
@@ -352,8 +389,9 @@ public class Service {
             System.out.println("Email: " + client.getEmail());
             System.out.println("Age: " + client.getAge());
         }
+        auditService.write("showClient");
     }
-    private void addOrderAux(){
+    private void addOrderAux() throws IOException {
         System.out.println("New Order");
         System.out.println("1. Existing Client");
         System.out.println("2. New Client");
@@ -387,7 +425,7 @@ public class Service {
         }
         addOrder(indicesOfProducts, units, client);
     }
-    private void showOrders(){
+    private void showOrders() throws IOException {
         System.out.println("Orders History:");
         int i = 1;
         for(Order order : orders){
@@ -398,14 +436,50 @@ public class Service {
             System.out.println("Date = " + order.getDate().format(formatter));
             i++;
         }
+        auditService.write("showOrders");
     }
-    private void showMoneyToProducers(){
+    private void showMoneyToProducers() throws IOException {
         for(Map.Entry<String, Double> entry : productProducer.entrySet()){
             System.out.println("Producer: " + entry.getKey() + " money = " + entry.getValue());
         }
+        auditService.write("showTheMoneyToProducers");
+    }
+    private void readFromCSVProducers() throws IOException {
+        ArrayList<Producer> pr = new ArrayList<>();
+        pr = readerWriterService.readFromCSV("Producer", this);
+        producers = new HashSet<>(pr);
+        System.out.println(producers);
+        auditService.write("readFromCSVProducers");
+    }
+    private void readFromCSVClients() throws IOException {
+        ArrayList<Client> cl = new ArrayList<>();
+        cl = readerWriterService.readFromCSV("Client", this);
+        clients = new ArrayList<>(cl);
+        System.out.println(clients);
+        auditService.write("readFromCSVClients");
     }
 
-    public void demo(){
+    private void readFromCSVFoods() throws IOException {
+        ArrayList<Food> foods2 = new ArrayList<>();
+        foods2 = readerWriterService.readFromCSV("Food", this);
+        foods = new ArrayList<>(foods2);
+        stock.addAll(foods);
+        System.out.println(foods);
+        auditService.write("readFromCSVFoods");
+    }
+
+    private void readFromCSVOrders() throws IOException {
+        ArrayList<Order> orders2 = new ArrayList<>();
+        orders2 = readerWriterService.readFromCSV("Order", this);
+        orders = new ArrayList<>(orders2);
+        System.out.println(orders);
+        auditService.write("readFromCSVOrders");
+    }
+
+    public void demo() throws IOException {
+//        readFromCSVProducers();
+//        readFromCSVClients();
+        readerWriterService.emptyFiles();
         addMoney(1000);
         addProducer("p1", "a1", "c1", "0755400594", "e1");
         addProducer("p2", "a2", "c2", "0765400594", "e2");
@@ -421,9 +495,9 @@ public class Service {
         showStock();
         showProducers();
         Client client = new Client("ion", "0743298456", "email@gmail.com", 20);
-        clients.add(client);
+        addClient(client);
         client = new Client("sergiu", "0743298454", "email2@gmail.com", 17);
-        clients.add(client);
+        addClient(client);
         showClients();
         addOrder(new int[]{1, 2, 3}, new int[]{1, 1, 2}, clients.get(0));
         addOrder(new int[]{1, 3, 4}, new int[]{9, 8, 2}, clients.get(0));
@@ -431,5 +505,14 @@ public class Service {
         showOrders();
         showStoreMoney();
         showMoneyToProducers();
+    }
+    public void readCSVDemo() throws IOException {
+        contactPeople.add(new Person("ion", "0755400564", "ion@gmail.com"));
+        contactPeople.add(new Person("ana", "0755400464", "ana@gmail.com"));
+        contactPeople.add(new Person("radu", "0755403564", "radu@gmail.com"));
+        readFromCSVProducers();
+        readFromCSVClients();
+        readFromCSVFoods();
+        readFromCSVOrders();
     }
 }

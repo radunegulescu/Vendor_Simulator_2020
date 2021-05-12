@@ -3,17 +3,23 @@ package project.classes;
 import java.util.Objects;
 
 public class Producer {
+    static int maxId;
+    private int producerId;
     private String name;
     private Person contactPerson;
     private String address;
 
     public Producer(String name, Person contactPerson, String address) {
+        this.producerId = Producer.maxId + 1;
+        Producer.maxId += 1;
         this.name = name;
         this.contactPerson = contactPerson;
         this.address = address;
     }
 
     public Producer() {
+        this.producerId = Producer.maxId + 1;
+        Producer.maxId += 1;
         this.name = "";
         this.contactPerson = null;
         this.address = "";
@@ -43,6 +49,10 @@ public class Producer {
         this.address = address;
     }
 
+    public int getProducerId() {
+        return producerId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,8 +70,9 @@ public class Producer {
     public String toString() {
         return "Producer{" +
                 "name='" + name + '\'' +
-                ", contactPerson=" + contactPerson +
-                ", address='" + address + '\'' +
+                " producerId=" + producerId +
+                " contactPerson=" + contactPerson +
+                " address='" + address + '\'' +
                 '}';
     }
 

@@ -74,12 +74,13 @@ public class Food extends Product{
     public String toString() {
         return "Food{" +
                 "name='" + name + '\'' +
-                ", pricePerUnit=" + pricePerUnit +
-                ", producer=" + producer +
-                ", weight=" + weight +
-                ", units=" + units +
-                ", calories=" + calories +
-                ", Ingredients=" + ingredients +
+                " productId=" + productId +
+                " pricePerUnit=" + pricePerUnit +
+                " producer=" + producer +
+                " weight=" + weight +
+                " units=" + units +
+                " calories=" + calories +
+                " Ingredients=" + ingredients.toString().replace(",", "") +
                 '}';
     }
 }

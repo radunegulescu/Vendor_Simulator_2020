@@ -1,0 +1,5 @@
+Name,PricePerUnit,ProducerId,Weight,Units,Calories,Ingredients
+Pui intreg,20.0,2,3.0,1.0,150,[Pui Apa Sare]
+Pui intreg dezosat,25.0,2,3.0,2.0,150,[Pui Apa Sare]
+Pui intreg dezosat,30.0,2,3.0,2.0,150,[Pui Apa Sare]
+Pui intreg marinat,25.0,2,3.0,2.0,150,[Pui Apa Sare]

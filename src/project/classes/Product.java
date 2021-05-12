@@ -3,6 +3,8 @@ package project.classes;
 import java.util.Objects;
 
 public abstract class Product implements Comparable<Product> {
+    static int maxId;
+    protected int productId;
     protected String name;
     protected double pricePerUnit;
     protected Producer producer;
@@ -10,6 +12,8 @@ public abstract class Product implements Comparable<Product> {
     protected double units;
 
     public Product(String name, double pricePerUnit, Producer producer, double weight, double units) {
+        this.productId = Product.maxId + 1;
+        Product.maxId += 1;
         this.name = name;
         this.pricePerUnit = pricePerUnit;
         this.producer = producer;
@@ -18,6 +22,8 @@ public abstract class Product implements Comparable<Product> {
     }
 
     public Product() {
+        this.productId = Product.maxId + 1;
+        Product.maxId += 1;
         this.name = null;
         this.pricePerUnit = 0;
         this.producer = null;
@@ -26,6 +32,7 @@ public abstract class Product implements Comparable<Product> {
     }
 
     public Product(Product product){
+        this.productId = product.productId;
         this.name = product.name;
         this.pricePerUnit = product.pricePerUnit;
         this.producer = product.producer;
@@ -73,6 +80,10 @@ public abstract class Product implements Comparable<Product> {
         this.units = units;
     }
 
+    public int getProductId() {
+        return productId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,6 +101,7 @@ public abstract class Product implements Comparable<Product> {
     public String toString() {
         return "Product{" +
                 "name='" + name + '\'' +
+                " productId=" + productId +
                 ", pricePerUnit=" + pricePerUnit +
                 ", producer=" + producer +
                 ", weight=" + weight +
