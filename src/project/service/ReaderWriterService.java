@@ -194,7 +194,7 @@ public class ReaderWriterService {
         String line = "";
         ArrayList<T> list2 = new ArrayList<>();
         if(type.equals("Producer")){
-            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/producers.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/producers_read.csv"));
             line = br.readLine();
             while ((line = br.readLine()) != null)   //returns a Boolean value
             {
@@ -211,7 +211,7 @@ public class ReaderWriterService {
             }
         }
         else if(type.equals("Client")){
-            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/clients.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/clients_read.csv"));
             line = br.readLine();
             while ((line = br.readLine()) != null)   //returns a Boolean value
             {
@@ -221,7 +221,7 @@ public class ReaderWriterService {
             }
         }
         else if(type.equals("Food")){
-            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/foods.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/foods_read.csv"));
             line = br.readLine();
             while ((line = br.readLine()) != null)   //returns a Boolean value
             {
@@ -244,7 +244,7 @@ public class ReaderWriterService {
             }
         }
         else if(type.equals("Order")){
-            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/orders.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("src/project/csv_input/orders_read.csv"));
             line = br.readLine();
             while ((line = br.readLine()) != null)   //returns a Boolean value
             {

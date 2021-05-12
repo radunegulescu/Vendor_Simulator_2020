@@ -447,14 +447,14 @@ public class Service {
     private void readFromCSVProducers() throws IOException {
         ArrayList<Producer> pr = new ArrayList<>();
         pr = readerWriterService.readFromCSV("Producer", this);
-        producers = new HashSet<>(pr);
+        producers.addAll(pr);
         System.out.println(producers);
         auditService.write("readFromCSVProducers");
     }
     private void readFromCSVClients() throws IOException {
         ArrayList<Client> cl = new ArrayList<>();
         cl = readerWriterService.readFromCSV("Client", this);
-        clients = new ArrayList<>(cl);
+        clients.addAll(cl);
         System.out.println(clients);
         auditService.write("readFromCSVClients");
     }
@@ -462,7 +462,7 @@ public class Service {
     private void readFromCSVFoods() throws IOException {
         ArrayList<Food> foods2 = new ArrayList<>();
         foods2 = readerWriterService.readFromCSV("Food", this);
-        foods = new ArrayList<>(foods2);
+        foods.addAll(foods2);
         stock.addAll(foods);
         System.out.println(foods);
         auditService.write("readFromCSVFoods");
@@ -471,7 +471,7 @@ public class Service {
     private void readFromCSVOrders() throws IOException {
         ArrayList<Order> orders2 = new ArrayList<>();
         orders2 = readerWriterService.readFromCSV("Order", this);
-        orders = new ArrayList<>(orders2);
+        orders.addAll(orders2);
         System.out.println(orders);
         auditService.write("readFromCSVOrders");
     }
