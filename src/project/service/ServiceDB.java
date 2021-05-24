@@ -148,8 +148,10 @@ public class ServiceDB {
         return -1;
     }
 
-    public void start() throws IOException {
-        clear_tabels();
+    public void start(boolean clear_tabels) throws IOException {
+        if(clear_tabels){
+            clear_tabels();
+        }
         boolean OK = true;
         while(OK) {
             System.out.println("Menu");
@@ -167,6 +169,9 @@ public class ServiceDB {
             System.out.println("12. Edit Foods");
             System.out.println("13. Edit Clients");
             System.out.println("14. Delete Producers");
+            System.out.println("15. Delete Clients");
+            System.out.println("16. Delete Foods");
+            System.out.println("17. Cancel Orders");
             System.out.println("0. Exit");
             Scanner read = new Scanner(System.in);
             int x = read.nextInt();
@@ -185,6 +190,9 @@ public class ServiceDB {
                 case 12 -> editFoods();
                 case 13 -> editClients();
                 case 14 -> deleteProducers();
+                case 15 -> deleteClients();
+                case 16 -> deleteFoods();
+                case 17 -> cancelOrders();
                 default -> OK = false;
             }
         }

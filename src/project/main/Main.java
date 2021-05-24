@@ -51,6 +51,6 @@ public class Main {
 //        producerRepository.deleteAllProducers();
         ServiceDB serviceDB = new ServiceDB();
 //        serviceDB.setup();
-        serviceDB.start();
+        serviceDB.start(true);
     }
 }
