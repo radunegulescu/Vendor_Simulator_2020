@@ -21,6 +21,13 @@ public class Order {
         this.date = date;
     }
 
+    public Order(int id, Client client, List<Product> products, LocalDateTime date) {
+        this.orderId = id;
+        this.client = client;
+        this.products = products;
+        this.date = date;
+    }
+
     public Order(){
         this.orderId = Order.maxId + 1;
         Order.maxId += 1;

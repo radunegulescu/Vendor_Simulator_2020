@@ -7,8 +7,21 @@ public class Food extends Product{
     private int calories;
     private List<String> ingredients;
 
+    public Food(String name, double pricePerUnit, Producer producer, double weight, double units, int calories, List<String> ingredients, double commercialExcess) {
+        super(name, pricePerUnit, producer, weight, units, commercialExcess);
+        this.calories = calories;
+        this.ingredients = ingredients;
+    }
+
     public Food(String name, double pricePerUnit, Producer producer, double weight, double units, int calories, List<String> ingredients) {
         super(name, pricePerUnit, producer, weight, units);
+        this.calories = calories;
+        this.ingredients = ingredients;
+    }
+
+    public Food(int id, String name, double pricePerUnit, Producer producer, double weight, double units, int calories, List<String> ingredients, double commercialExcess) {
+        super(name, pricePerUnit, producer, weight, units, commercialExcess);
+        this.productId = id;
         this.calories = calories;
         this.ingredients = ingredients;
     }
@@ -73,8 +86,8 @@ public class Food extends Product{
     @Override
     public String toString() {
         return "Food{" +
-                "name='" + name + '\'' +
-                " productId=" + productId +
+                "productId=" + productId +
+                " name='" + name + '\'' +
                 " pricePerUnit=" + pricePerUnit +
                 " producer=" + producer +
                 " weight=" + weight +

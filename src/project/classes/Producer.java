@@ -17,6 +17,13 @@ public class Producer {
         this.address = address;
     }
 
+    public Producer(int id, String name, Person contactPerson, String address){
+        this.producerId = id;
+        this.name = name;
+        this.contactPerson = contactPerson;
+        this.address = address;
+    }
+
     public Producer() {
         this.producerId = Producer.maxId + 1;
         Producer.maxId += 1;

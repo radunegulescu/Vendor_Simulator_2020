@@ -79,9 +79,9 @@ public class Service {
         this.money = 0;
         this.clients = new ArrayList<>();
         this.readerWriterService = ReaderWriterService.getInstance();
+        this.auditService = AuditService.getInstance();
         this.contactPeople = new ArrayList<>();
         this.foods = new ArrayList<>();
-        this.auditService = new AuditService();
     }
     private void addMapProducer(int producerId, double units, double pricePerUnit){
         List<Producer> list = new ArrayList<>(producers);

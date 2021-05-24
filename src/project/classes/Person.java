@@ -18,6 +18,13 @@ public class Person {
         this.email = email;
     }
 
+    public Person(int personId, String name, String phoneNumber, String email){
+        this.personId = personId;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
     //constructor without parameters
     public Person (){
         this.personId = Person.maxId + 1;

@@ -10,8 +10,21 @@ public abstract class Product implements Comparable<Product> {
     protected Producer producer;
     protected double weight;
     protected double units;
+    protected double commercialExcess;
 
     public Product(String name, double pricePerUnit, Producer producer, double weight, double units) {
+        this.commercialExcess = 0;
+        this.productId = Product.maxId + 1;
+        Product.maxId += 1;
+        this.name = name;
+        this.pricePerUnit = pricePerUnit;
+        this.producer = producer;
+        this.weight = weight;
+        this.units = units;
+    }
+
+    public Product(String name, double pricePerUnit, Producer producer, double weight, double units, double commercialExcess) {
+        this.commercialExcess = commercialExcess;
         this.productId = Product.maxId + 1;
         Product.maxId += 1;
         this.name = name;
@@ -22,6 +35,7 @@ public abstract class Product implements Comparable<Product> {
     }
 
     public Product() {
+        this.commercialExcess = 0;
         this.productId = Product.maxId + 1;
         Product.maxId += 1;
         this.name = null;
@@ -32,12 +46,21 @@ public abstract class Product implements Comparable<Product> {
     }
 
     public Product(Product product){
+        this.commercialExcess = product.commercialExcess;
         this.productId = product.productId;
         this.name = product.name;
         this.pricePerUnit = product.pricePerUnit;
         this.producer = product.producer;
         this.weight = product.weight;
         this.units = product.units;
+    }
+
+    public double getCommercialExcess() {
+        return commercialExcess;
+    }
+
+    public void setCommercialExcess(double commercialExcess) {
+        this.commercialExcess = commercialExcess;
     }
 
     public String getName() {
@@ -100,12 +123,13 @@ public abstract class Product implements Comparable<Product> {
     @Override
     public String toString() {
         return "Product{" +
-                "name='" + name + '\'' +
-                " productId=" + productId +
+                "productId=" + productId +
+                " name='" + name + '\'' +
                 ", pricePerUnit=" + pricePerUnit +
                 ", producer=" + producer +
                 ", weight=" + weight +
                 ", units=" + units +
+                ", commercialExcess=" + commercialExcess +
                 '}';
     }
 

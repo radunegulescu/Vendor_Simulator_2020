@@ -6,14 +6,20 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 public class AuditService {
-
-    public AuditService() throws IOException {
+    private static AuditService single_instance = null;
+    private AuditService() throws IOException {
         File csvFile = new File("src/project/audits/audit.csv");
         if (csvFile.isFile()) {
             FileWriter csvWriter = new FileWriter("src/project/audits/audit.csv", false);
             csvWriter.append("");
         }
     }
+    public static AuditService getInstance() throws IOException {
+        if (single_instance == null)
+            single_instance = new AuditService();
+        return single_instance;
+    }
+
 
     public void write(String action_name) throws IOException {
         File csvFile = new File("src/project/audits/audit.csv");

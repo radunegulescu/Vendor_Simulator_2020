@@ -12,6 +12,12 @@ public class Client extends Person{
         this.age = age;
     }
 
+    public Client(int id, String name, String phoneNumber, String email, int age) {
+        super(name, phoneNumber, email);
+        this.personId = id;
+        this.age = age;
+    }
+
     // contructor without parameters
     public Client() {
         super();
