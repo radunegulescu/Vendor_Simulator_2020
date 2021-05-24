@@ -26,3 +26,24 @@ The actions that can be made are:
   11. Show producers
   0. Exit
  
+The database part of the project is made on 5 entities: Person, Producer, Food, Client and Order.
+It can make CRUD operations on the objects using an interactive menu:
+  
+  1. Add Money To The Store
+  2. Add Producer
+  3. Add Food 
+  4. Add Client
+  5. Add Order
+  6. Show Food  
+  7. Show Store Money
+  8. Show Orders History
+  9. Show Clients
+  10. Show Producers
+  11. Edit Producers
+  12. Edit Foods
+  13. Edit Clients
+  14. Delete Producers
+  15. Delete Clients
+  16. Delete Foods
+  17. Cancel Orders
+  18. Exit
